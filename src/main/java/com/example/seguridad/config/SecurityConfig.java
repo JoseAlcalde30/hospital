@@ -28,10 +28,11 @@ public class SecurityConfig {
 	    .authorizeHttpRequests(auth -> auth
 	    	    .requestMatchers("/login", "/css/**", "/js/**").permitAll()
 	    	    .requestMatchers("/dashboard").authenticated()
-	    	    .requestMatchers("/menores/admin/").hasRole("ADMIN")
-	    	    .requestMatchers("/vacunas/admin/").hasRole("ADMIN")
-	    	    .requestMatchers("/vacunaciones/admin/").hasRole("ADMIN")
 	    	    .requestMatchers("/usuarios/").hasRole("ADMIN")
+	    	     .requestMatchers("/menores/admin/").hasRole("ADMIN")
+	    	     .requestMatchers("/vacunas/admin/").hasRole("ADMIN")
+	    	      .requestMatchers("/vacunaciones/admin/").hasRole("ADMIN")
+	    	   
 	    	    .requestMatchers("/menores/usuario/").hasAnyRole("USER", "ADMIN")
 	    	    .requestMatchers("/vacunas/usuario/").hasAnyRole("USER", "ADMIN")
 	    	    .requestMatchers("/vacunaciones/usuario/").hasAnyRole("USER", "ADMIN")
