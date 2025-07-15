@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Historial de Vacunaciones</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <h2 class="mb-4">Historial de Vacunaciones</h2>
+
+    <div class="mb-3">
+        <h5>Menor:</h5>
+        <ul>
+            <li><strong>Nombre:</strong> <span th:text="${menor.nombre}"></span></li>
+            <li><strong>DNI:</strong> <span th:text="${menor.dni}"></span></li>
+            <li><strong>Fecha de nacimiento:</strong> <span th:text="${menor.fechaNacimiento}"></span></li>
+            <li><strong>Edad:</strong> <span th:text="${menor.edad} + ' años'"></span></li>
+        </ul>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Fecha</th>
+                    <th>Tipo de Vacuna</th>
+                    <th>Nombre</th>
+                    <th>Laboratorio</th>
+                    <th>Observaciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="vac, iterStat : ${vacunaciones}">
+                    <td th:text="${iterStat.count}"></td>
+                    <td th:text="${vac.fecha}"></td>
+                    <td th:text="${vac.vacuna.tipo}"></td>
+                    <td th:text="${vac.vacuna.nombre}"></td>
+                    <td th:text="${vac.vacuna.laboratorio}"></td>
+                    <td th:text="${vac.observaciones}"></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(vacunaciones)}">
+                    <td colspan="6" class="text-center">No se encontraron vacunaciones registradas.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <a th:href="@{/vacunaciones/admin}" class="btn btn-secondary mt-3">Volver</a>
+</div>
+<div class="container mt-4 mb-4 text-center">
+    <a class="btn btn-secondary" th:href="@{/dashboard}">← Volver al Menú Principal</a>
+</div>
+</body>
+</html>

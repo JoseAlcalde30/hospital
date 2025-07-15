@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Vacuna</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="mb-4">Registrar Vacuna</h2>
+
+    <form th:action="@{/vacunas/admin/guardar}" th:object="${vacuna}" method="post"
+          th:data-tipo="${vacuna.tipo}" th:data-nombre="${vacuna.nombre}">
+
+        <div class="mb-3">
+            <label for="tipo" class="form-label">Tipo de vacuna</label>
+            <select id="tipo" th:field="*{tipo}" class="form-select" onchange="actualizarCampos()" required>
+                <option value="" disabled>Seleccione el tipo</option>
+                <option value="VIRAL" th:selected="${vacuna.tipo == 'VIRAL'}">Viral</option>
+                <option value="BACTERIANA" th:selected="${vacuna.tipo == 'BACTERIANA'}">Bacteriana</option>
+                <option value="TOXOIDE" th:selected="${vacuna.tipo == 'TOXOIDE'}">Toxoide</option>
+                <option value="RECOMBINANTE" th:selected="${vacuna.tipo == 'RECOMBINANTE'}">Recombinante</option>
+                <option value="ARN" th:selected="${vacuna.tipo == 'ARN'}">ARN</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre de la vacuna</label>
+            <select id="nombre" th:field="*{nombre}" class="form-select" required>
+                <option value="" disabled selected>Seleccione el nombre</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="laboratorio" class="form-label">Laboratorio</label>
+            <input type="text" id="laboratorio" th:field="*{laboratorio}" class="form-control" required readonly>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-success">Guardar</button>
+            <a th:href="@{/vacunas/admin}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    const datosPorTipo = {
+        "VIRAL": {
+            nombres: ["SRP (Sarampión-Rubeola-Parotiditis)", "Varicela", "Fiebre amarilla"],
+            laboratorio: "Sanofi Pasteur"
+        },
+        "BACTERIANA": {
+            nombres: ["Pentavalente", "Neumococo", "Meningococo"],
+            laboratorio: "GlaxoSmithKline"
+        },
+        "TOXOIDE": {
+            nombres: ["DTP", "Toxoide tetánico"],
+            laboratorio: "Bio Farma"
+        },
+        "RECOMBINANTE": {
+            nombres: ["Hepatitis B", "Vacuna contra el VPH (Gardasil)"],
+            laboratorio: "Merck"
+        },
+        "ARN": {
+            nombres: ["COVID-19 (Pfizer)", "Moderna"],
+            laboratorio: "Pfizer-BioNTech"
+        }
+    };
+
+    function actualizarCampos() {
+        const tipo = document.getElementById("tipo").value;
+        const nombreSelect = document.getElementById("nombre");
+        const laboratorioInput = document.getElementById("laboratorio");
+
+        const datos = datosPorTipo[tipo];
+        const nombreActual = nombreSelect.getAttribute("data-seleccionado");
+
+        nombreSelect.innerHTML = '<option value="" disabled>Seleccione el nombre</option>';
+
+        if (datos) {
+            datos.nombres.forEach(nom => {
+                const option = document.createElement("option");
+                option.value = nom;
+                option.text = nom;
+                if (nom === nombreActual) {
+                    option.selected = true;
+                }
+                nombreSelect.appendChild(option);
+            });
+
+            laboratorioInput.value = datos.laboratorio;
+        } else {
+            laboratorioInput.value = "";
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const form = document.querySelector("form");
+        const tipo = form.dataset.tipo;
+        const nombre = form.dataset.nombre;
+
+        const nombreSelect = document.getElementById("nombre");
+        nombreSelect.setAttribute("data-seleccionado", nombre);
+
+        if (tipo) {
+            document.getElementById("tipo").value = tipo;
+            actualizarCampos();
+        }
+    });
+</script>
+</body>
+</html>
